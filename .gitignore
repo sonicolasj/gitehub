@@ -3,8 +3,7 @@ node_modules
 
 # Cordova
 # android
-cordova/platforms/android/*
+cordova/platforms/android/
 
 # resources
 cordova/resources/signing
-
