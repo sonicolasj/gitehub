@@ -12,7 +12,7 @@
     function getLogements(params) {
         params = validateParams(params);
         
-        return $.ajax(BASE_URL + "?" + $.params(params));
+        return $.ajax(BASE_URL + "?" + $.param(params));
     }
 
     // Removes checks the presence of the necessaries parameters, and removes superfluous ones
@@ -21,17 +21,22 @@
             finalParams = {},
             errors = [];
 
-        if (params.location === undefined) {
+        if (params.location === undefined || params.location === null || params.location.trim() === "") {
             errors.push("Argument manquant: ville");
         }
         finalParams.location = params.location;
 
-        if (params.guests === undefined) {
+        if (params.guests === undefined || params.guests === null || params.guests.trim() === "") {
             errors.push("Argument manquant: nombre de personnes");
+        }
+        else {
+            if (parseInt(params.guests) <= 0) {
+                errors.push("Nombre de personnes invalide");
+            }
         }
         finalParams.guests = params.guests;
 
-        if (params.checkin === undefined) {
+        if (params.checkin === undefined || params.checkin === null || params.checkin.trim() === "") {
             errors.push("Argument manquant: date de début");
         }
         else {
@@ -45,7 +50,7 @@
         }
         finalParams.checkin = params.checkin;
 
-        if (params.checkout === undefined) {
+        if (params.checkout === undefined || params.checkout === null || params.checkout.trim() === "") {
             errors.push("Argument manquant: date de fin");
         }
         else {
@@ -69,6 +74,4 @@
 
         return finalParams;
     }
-
-    
 })(window, $);

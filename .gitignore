@@ -2,8 +2,7 @@ bower_components
 node_modules
 
 # Cordova
-# android
 cordova/platforms/android/
-
+cordova/platforms/browser/
 # resources
 cordova/resources/signing
