@@ -8,7 +8,7 @@
     },
     "installed_plugins": {
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "net.sonicolasj.giteHubgiteHub"
+            "PACKAGE_NAME": "net.sonicolasj.gitehub"
         }
     },
     "dependent_plugins": {}
