@@ -7,6 +7,7 @@
 
     var BASE_URL = "https://www.airbnb.fr/search/search_results/";
     var now = new Date();
+    now.setHours(0,0,0,0);
 
     // Returns a promise querying the data
     function getLogements(params) {
@@ -44,8 +45,8 @@
             if (checkinDate.toString() === "Invalid Date") {
                 errors.push("La date de début est invalide");
             }
-            else if (checkinDate <= now) {
-                errors.push("La date de début doit être supérieur à maintenant");
+            else if (checkinDate < now) {
+                errors.push("La date de début doit être supérieure ou égale à maintenant");
             }
         }
         finalParams.checkin = params.checkin;

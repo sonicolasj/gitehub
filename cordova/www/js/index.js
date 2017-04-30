@@ -1,47 +1,139 @@
 $(document).ready(function() {
-    $("form[name=search-form]").submit(onSubmitSearchForm);
+    $form = $("form[name=search-form]");
+    $submitButton = $form.find("input[type=submit]");
+    
+    $resultsListContainer = $(".results-list-container");
+    $resultsCountContainer = $("#results-count");
+
+    $resultDetailsContainer = $("#result-details");
+
+    $form.submit(onSubmitSearchForm);
 });
 
-var results = [];
+let $form;
+let $submitButton;
 
-function displayResults() {
-    var $resultsListContainer = $(".results-list-container");
+let $resultsListContainer;
+let $resultsCountContainer;
+
+let $resultDetailsContainer;
+
+// Affiche la section "recherche, resultats, details" voulue
+function showCollapsablePart(name) {
+    let collapsables = [ "recherche", "resultats", "details" ];
+
+    for (let i = 0; i < collapsables.length; i++) {
+        let collapsable = collapsables[i];
+
+        if (name === collapsable) {
+            $("#" + collapsable).collapse("show");
+        } else {
+            $("#" + collapsable).collapse("hide");
+        }   
+    }
+}
+
+function displayResultsList(results) {
+    showCollapsablePart("resultats");
+
     if (results.length > 0) {
         // Vidage du contenu précédent
         $resultsListContainer.html("");
+        
+        // Affichage du nombre de résultats
+        $resultsCountContainer.html(results.length);
 
         // Pour chaque résultat, affichage de la photo et du titre
-        for (var i = 0; i < results.length; i++) {
-            var result = results[i].listing;
-            
-            var listElement = '' +
-            '<div class="row">' + 
-                '<div class="col-xs-3">' +
-                    '<img src="' + result.picture_url + '" />' + 
-                '</div>' + 
+        for (let i = 0; i < results.length; i++) {
+            let result = results[i],            
+                listing = result.listing;
 
-                '<div class="col-xs-9">' +
-                    result.name + 
-                '</div>' + 
-            '</div>';
+            let $listElement = $('' +
+            '<div class="media">' +
+                '<div class="media-left">' +
+                   ' <img class="media-object" src="' + listing.picture_url + '" width="64" height="64" />' +
+                '</div>' +
 
-            $resultsListContainer.append(listElement);
+                '<div class="media-body">' +
+                    listing.name +
+                '</div>' +
+            '</div>');
+
+            // Appelle la fonction d'affichage de détails sur le clic
+            $listElement.on('click', function(e) {
+                e.preventDefault();
+
+                displayResultDetails(result);
+            });
+
+            $resultsListContainer.append($listElement);
         }
     }
     else {
         $resultsListContainer.html("Aucun résultat");
+
+        // Suppression du compteur de résultats
+        $resultsCountContainer.html("");
+    }
+}
+
+function displayResultDetails(result) {
+    // On affiche les détails de l'élément, sinon rien
+    if (result) {
+        let listing = result.listing;
+
+        let $resultDetailsElement = $('' +
+        '<img src="' + listing.picture_url + '" height="256" width="256" />' +
+
+        '<p>' +
+            listing.name +
+        '</p>' +
+
+        '<div class="btn-group" role="group">' +
+            '<button type="button" class="btn btn-default btn-calendar">' +
+                '<span class="glyphicon glyphicon-calendar"></span>' +
+            '</button>' +
+
+            '<button type="button" class="btn btn-default btn-share">' +
+                '<span class="glyphicon glyphicon-share"></span>' +
+            '</button>' +
+        '</div>');
+
+        // Ajout dans le calendrier
+        $resultDetailsElement.find(".btn-calendar").on("click", function(e) {
+            
+        });
+
+        // Partage en SMS
+        $resultDetailsElement.find(".btn-share").on("click", function(e) {
+
+        });
+
+        $resultDetailsContainer.html($resultDetailsElement);
+
+        showCollapsablePart("details");
+    } else {
+        $resultDetailsContainer.html("Aucun élément sélectionné");
     }
 }
 
 function onSubmitSearchForm(e) {
     e.preventDefault();
 
-    var $errorContainer = $(".search-errors-container");
+    $submitButton.html("Recherche...");
+    $submitButton.attr("disabled", "disabled");
+
+    // On retire le contenu du details
+    displayResultDetails(null);
+
+    // On cache l'erreur
+    let $errorContainer = $(".search-errors-container");
     $errorContainer.html("");
     $errorContainer.addClass("hidden");
 
-    var $form = $(e.target);
-    var searchData = $form.serializeArray()
+    // Récupération des valeurs du formulaire
+    // [ { "name": "fieldName", "value": "fieldValue" } ] => { "fieldName": "fieldValue" }
+    let searchData = $form.serializeArray() 
                           .reduce(function (acc, field) { acc[field.name] = field.value; return acc; }, {});
 
     try {
@@ -49,24 +141,32 @@ function onSubmitSearchForm(e) {
                    .done(onReceivedSearchResult)
                    .fail(onFailedSearchResult);
     } catch (error) {
-        var $errorContainer = $(".search-errors-container");
+        // Affichage des erreurs de validation
+        let $errorContainer = $(".search-errors-container");
         $errorContainer.html(error.message.replace(/\n/, "<br/>"));
         $errorContainer.removeClass("hidden");
+
+        // Réinitialisation du bouton de recherche
+        $submitButton.html("Rechercher");
+        $submitButton.removeAttr("disabled");
     } 
 }
 
 function onReceivedSearchResult(data) {
-    results = data.results_json.search_results;
+    displayResultsList(data.results_json.search_results);
 
-
+    // Réinitialisation du bouton de recherche
+    $submitButton.html("Rechercher");
+    $submitButton.removeAttr("disabled");
 }
 
 function onFailedSearchResult(error) {
-    var $errorContainer = $(".search-errors-container");
+    // Affichage de l'erreur
+    let $errorContainer = $(".search-errors-container");
     $errorContainer.html(error.statusText);
     $errorContainer.removeClass("hidden");
-}
 
-function onResultSelected(e) {
-    e.preventDefault();
+    // Réinitialisation du bouton de recherche
+    $submitButton.html("Recherche...");
+    $submitButton.removeAttr("disabled");
 }

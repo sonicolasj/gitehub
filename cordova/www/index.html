@@ -2,7 +2,7 @@
 <html lang="fr">
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' http: https: data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' http: https: data: content:;" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
@@ -24,15 +24,15 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingOne">
                         <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#recherche" aria-expanded="true" aria-controls="recherche">
                                 Recherche
                             </a>
                         </h4>
                     </div>
 
-                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div id="recherche" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                         <div class="panel-body">
-                            <form name="search-form" onSubmit="onSubmitSearchForm">
+                            <form name="search-form">
                                 <fieldset>
                                     <legend>Rechercher un logement</legend>
 
@@ -41,22 +41,22 @@
 
                                     <div class="form-group">
                                         <label for="location">Ville</label>
-                                        <input type="text" class="form-control" name="location" required="required" placeholder="" />
+                                        <input type="text" class="form-control" name="location" required="required" placeholder="" value="Arras" />
                                     </div>
 
                                     <div class="form-group">
                                         <label for="guests">Nombre de personnes</label>
-                                        <input type="number" class="form-control" name="guests" required="required" placeholder="" />
+                                        <input type="number" class="form-control" name="guests" required="required" placeholder="" value="2" />
                                     </div>
 
                                     <div class="form-group">
                                         <label for="checkin">Date d'arrivée</label>
-                                        <input type="date" class="form-control" name="checkin" required="required" placeholder="" />
+                                        <input type="date" class="form-control" name="checkin" required="required" placeholder="" value="2017-04-30" />
                                     </div>
 
                                     <div class="form-group">
                                         <label for="checkout">Date de départ</label>
-                                        <input type="date" class="form-control" name="checkout" required="required" placeholder="" />
+                                        <input type="date" class="form-control" name="checkout" required="required" placeholder="" value="2017-05-01" />
                                     </div>
                                 </fieldset>
 
@@ -69,16 +69,27 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingTwo">
                         <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#resultats" aria-expanded="false" aria-controls="resultats">
                                 Résultats
-                                <span class="pull-left badge" id="results-count"></span>
+
+                                <span class="pull-right badge" id="results-count"></span>
                             </a>
                         </h4>
                     </div>
 
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div id="resultats" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body results-list-container">
                             Aucun résultat
+                            
+                            <!--<div class="media">
+                                <div class="media-left">
+                                    <img class="media-object" src="result.picture_url" width="64" height="64" />
+                                </div>
+
+                                <div class="media-body">
+                                    result.name
+                                </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -86,15 +97,31 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingThree">
                         <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#details" aria-expanded="false" aria-controls="details">
                                 Détails
                             </a>
                         </h4>
                     </div>
 
-                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                        <div class="panel-body">
+                    <div id="details" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body" id="result-details">
                             Aucun élément sélectionné
+
+                            <!--<img src="result.picture_url" height="256" width="256" />
+
+                            <p>
+                                result.name
+                            </p>
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-calendar">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </button>
+
+                                <button type="button" class="btn btn-default btn-share">
+                                    <span class="glyphicon glyphicon-share"></span>
+                                </button>
+                            </div>-->
                         </div>
                     </div>
                 </div>
