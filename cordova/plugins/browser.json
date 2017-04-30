@@ -12,7 +12,14 @@
         },
         "cordova-plugin-calendar": {
             "PACKAGE_NAME": "net.sonicolasj.gitehub"
+        },
+        "cordova-plugin-x-socialsharing": {
+            "PACKAGE_NAME": "net.sonicolasj.gitehub"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "es6-promise-plugin": {
+            "PACKAGE_NAME": "net.sonicolasj.gitehub"
+        }
+    }
 }

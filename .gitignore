@@ -8,3 +8,5 @@ cordova/resources/signing
 cordova/plugins/cordova-plugin-calendar/
 cordova/plugins/cordova-plugin-compat/
 cordova/plugins/cordova-plugin-whitelist/
+cordova/plugins/cordova-plugin-x-socialsharing/
+cordova/plugins/es6-promise-plugin/

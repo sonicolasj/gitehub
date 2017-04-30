@@ -114,7 +114,21 @@ function displayResultDetails(result) {
 
         // Partage en SMS
         $resultDetailsElement.find(".btn-share").on("click", function(e) {
+            // Corps du message :
+            // Réservation GiteHub
+            // 
+            // Date de début : result.pricing_quote.check_in
+            // Date de fin : result.pricing_quote.check_out
+            //
+            // Adresse : listing.public_address +
+            // Description : "listing.name"
+            let message = `Réservation GiteHub\n\nDate de début : ${result.pricing_quote.check_in}\nDate de fin : ${result.pricing_quote.check_out}\n\nAdresse : ${listing.public_address}\nDescription : "${listing.name}"`;
 
+            // plugins.socialsharing.shareViaSMS('My cool message', '0612345678,0687654321', function(msg) {console.log('ok: ' + msg)}, function(msg) {alert('error: ' + msg)})
+            plugins.socialsharing.shareViaSMS(
+                message, 
+                null
+            );
         });
 
         $resultDetailsContainer.html($resultDetailsElement);
