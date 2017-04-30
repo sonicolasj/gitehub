@@ -101,7 +101,15 @@ function displayResultDetails(result) {
 
         // Ajout dans le calendrier
         $resultDetailsElement.find(".btn-calendar").on("click", function(e) {
-            
+            // Crée un évènement de calendrier
+            // plugins.calendar.createEventInteractively(title, eventLocation, notes, startDate, endDate, success, error);
+            plugins.calendar.createEventInteractively(
+                "Réservation GiteHub", 
+                listing.public_address, 
+                listing.name, 
+                new Date(result.pricing_quote.check_in), 
+                new Date(result.pricing_quote.check_out)
+            );
         });
 
         // Partage en SMS

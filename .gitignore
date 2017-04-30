@@ -4,5 +4,7 @@ node_modules
 # Cordova
 cordova/platforms/android/
 cordova/platforms/browser/
-# resources
 cordova/resources/signing
+cordova/plugins/cordova-plugin-calendar/
+cordova/plugins/cordova-plugin-compat/
+cordova/plugins/cordova-plugin-whitelist/
