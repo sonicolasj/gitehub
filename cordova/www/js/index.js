@@ -1,6 +1,5 @@
 $(document).ready(function() {
     $form = $("form[name=search-form]");
-    $submitButton = $form.find("input[type=submit]");
     
     $resultsListContainer = $(".results-list-container");
     $resultsCountContainer = $("#results-count");
@@ -11,7 +10,6 @@ $(document).ready(function() {
 });
 
 let $form;
-let $submitButton;
 
 let $resultsListContainer;
 let $resultsCountContainer;
@@ -22,14 +20,45 @@ let $resultDetailsContainer;
 function showCollapsablePart(name) {
     let collapsables = [ "recherche", "resultats", "details" ];
 
-    for (let i = 0; i < collapsables.length; i++) {
-        let collapsable = collapsables[i];
-
+    for (let collapsable of collapsables) {
         if (name === collapsable) {
-            $("#" + collapsable).collapse("show");
+            $(`#${collapsable}`).collapse("show");
+
         } else {
-            $("#" + collapsable).collapse("hide");
+            $(`#${collapsable}`).collapse("hide");
         }   
+    }
+}
+
+// Affiche ou masque le texte d'erreur
+function displayErrorText(errorText) {
+    errorText = errorText.trim();
+    if (errorText) {
+        errorText = errorText.replace(/\n/, "<br/>");
+
+        $(".search-errors-container")
+            .html(errorText)
+            .removeClass("hidden");
+
+    }
+    else {
+        $(".search-errors-container")
+            .html("")
+            .addClass("hidden");
+    }
+}
+
+// Change l'état du bouton recherche "Recherche..., Rechercher"
+function changeSearchButtonState(state) {
+    let $submitButton = $form.find("input[type=submit]");
+
+    if (state === 'off') {
+        $submitButton.val("Recherche...");
+        $submitButton.attr("disabled", "disabled");
+
+    } else if (state === 'on') {
+        $submitButton.val("Rechercher");
+        $submitButton.removeAttr("disabled");
     }
 }
 
@@ -37,27 +66,26 @@ function displayResultsList(results) {
     showCollapsablePart("resultats");
 
     if (results.length > 0) {
-        // Vidage du contenu précédent
+        // Suppression du contenu précédent
         $resultsListContainer.html("");
         
         // Affichage du nombre de résultats
         $resultsCountContainer.html(results.length);
 
         // Pour chaque résultat, affichage de la photo et du titre
-        for (let i = 0; i < results.length; i++) {
-            let result = results[i],            
-                listing = result.listing;
+        for (let result of results) {
+            let listing = result.listing;
 
-            let $listElement = $('' +
-            '<div class="media">' +
-                '<div class="media-left">' +
-                   ' <img class="media-object" src="' + listing.picture_url + '" width="64" height="64" />' +
-                '</div>' +
+            let $listElement = $(`
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object" src="${listing.picture_url}" width="64" height="64" />
+                </div>
 
-                '<div class="media-body">' +
-                    listing.name +
-                '</div>' +
-            '</div>');
+                <div class="media-body">
+                    ${listing.name}
+                </div>
+            </div>`);
 
             // Appelle la fonction d'affichage de détails sur le clic
             $listElement.on('click', function(e) {
@@ -82,22 +110,22 @@ function displayResultDetails(result) {
     if (result) {
         let listing = result.listing;
 
-        let $resultDetailsElement = $('' +
-        '<img src="' + listing.picture_url + '" height="256" width="256" />' +
+        let $resultDetailsElement = $(`
+        <img src="${listing.picture_url}" height="256" width="256" />
 
-        '<p>' +
-            listing.name +
-        '</p>' +
+        <p>
+            ${listing.name}
+        </p>
 
-        '<div class="btn-group" role="group">' +
-            '<button type="button" class="btn btn-default btn-calendar">' +
-                '<span class="glyphicon glyphicon-calendar"></span>' +
-            '</button>' +
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default btn-calendar">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </button>
 
-            '<button type="button" class="btn btn-default btn-share">' +
-                '<span class="glyphicon glyphicon-share"></span>' +
-            '</button>' +
-        '</div>');
+            <button type="button" class="btn btn-default btn-share">
+                <span class="glyphicon glyphicon-share"></span>
+            </button>
+        </div>`);
 
         // Ajout dans le calendrier
         $resultDetailsElement.find(".btn-calendar").on("click", function(e) {
@@ -120,7 +148,7 @@ function displayResultDetails(result) {
             // Date de début : result.pricing_quote.check_in
             // Date de fin : result.pricing_quote.check_out
             //
-            // Adresse : listing.public_address +
+            // Adresse : listing.public_address
             // Description : "listing.name"
             let message = `Réservation GiteHub\n\nDate de début : ${result.pricing_quote.check_in}\nDate de fin : ${result.pricing_quote.check_out}\n\nAdresse : ${listing.public_address}\nDescription : "${listing.name}"`;
 
@@ -134,6 +162,7 @@ function displayResultDetails(result) {
         $resultDetailsContainer.html($resultDetailsElement);
 
         showCollapsablePart("details");
+        
     } else {
         $resultDetailsContainer.html("Aucun élément sélectionné");
     }
@@ -142,21 +171,17 @@ function displayResultDetails(result) {
 function onSubmitSearchForm(e) {
     e.preventDefault();
 
-    $submitButton.val("Recherche...");
-    $submitButton.attr("disabled", "disabled");
+    changeSearchButtonState('off');
 
     // On retire le contenu du details
     displayResultDetails(null);
 
     // On cache l'erreur
-    let $errorContainer = $(".search-errors-container");
-    $errorContainer.html("");
-    $errorContainer.addClass("hidden");
+    displayErrorText("");
 
     // Récupération des valeurs du formulaire
-    // [ { "name": "fieldName", "value": "fieldValue" } ] => { "fieldName": "fieldValue" }
-    let searchData = $form.serializeArray() 
-                          .reduce(function (acc, field) { acc[field.name] = field.value; return acc; }, {});
+    // [ { "name": "field.name", "value": "field.value" } ] => { "field.name": "field.value" }
+    let searchData = $form.serializeArray().reduce((acc, field) => { acc[field.name] = field.value; return acc; }, {});
 
     try {
         dataService.getLogements(searchData)
@@ -164,13 +189,10 @@ function onSubmitSearchForm(e) {
                    .fail(onFailedSearchResult);
     } catch (error) {
         // Affichage des erreurs de validation
-        let $errorContainer = $(".search-errors-container");
-        $errorContainer.html(error.message.replace(/\n/, "<br/>"));
-        $errorContainer.removeClass("hidden");
+        displayErrorText(error.message)
 
         // Réinitialisation du bouton de recherche
-        $submitButton.val("Rechercher");
-        $submitButton.removeAttr("disabled");
+        changeSearchButtonState('on');
     } 
 }
 
@@ -178,17 +200,13 @@ function onReceivedSearchResult(data) {
     displayResultsList(data.results_json.search_results);
 
     // Réinitialisation du bouton de recherche
-    $submitButton.val("Rechercher");
-    $submitButton.removeAttr("disabled");
+    changeSearchButtonState('on');
 }
 
 function onFailedSearchResult(error) {
     // Affichage de l'erreur
-    let $errorContainer = $(".search-errors-container");
-    $errorContainer.html(error.statusText);
-    $errorContainer.removeClass("hidden");
+    displayErrorText(error.statusText);
 
     // Réinitialisation du bouton de recherche
-    $submitButton.val("Recherche...");
-    $submitButton.removeAttr("disabled");
+    changeSearchButtonState('on');
 }
