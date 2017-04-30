@@ -128,7 +128,7 @@ function displayResultDetails(result) {
 function onSubmitSearchForm(e) {
     e.preventDefault();
 
-    $submitButton.html("Recherche...");
+    $submitButton.val("Recherche...");
     $submitButton.attr("disabled", "disabled");
 
     // On retire le contenu du details
@@ -155,7 +155,7 @@ function onSubmitSearchForm(e) {
         $errorContainer.removeClass("hidden");
 
         // Réinitialisation du bouton de recherche
-        $submitButton.html("Rechercher");
+        $submitButton.val("Rechercher");
         $submitButton.removeAttr("disabled");
     } 
 }
@@ -164,7 +164,7 @@ function onReceivedSearchResult(data) {
     displayResultsList(data.results_json.search_results);
 
     // Réinitialisation du bouton de recherche
-    $submitButton.html("Rechercher");
+    $submitButton.val("Rechercher");
     $submitButton.removeAttr("disabled");
 }
 
@@ -175,6 +175,6 @@ function onFailedSearchResult(error) {
     $errorContainer.removeClass("hidden");
 
     // Réinitialisation du bouton de recherche
-    $submitButton.html("Recherche...");
+    $submitButton.val("Recherche...");
     $submitButton.removeAttr("disabled");
 }
