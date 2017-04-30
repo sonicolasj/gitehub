@@ -11,6 +11,7 @@ import {
 import DataService from './services/DataService'
 
 import SearchForm from './components/SearchForm'
+import HousingDisplay from './components/HousingDisplay'
 
 export default class GiteHub extends React.Component {
     constructor() {
@@ -37,7 +38,7 @@ export default class GiteHub extends React.Component {
                 <SearchForm onSubmit={this.onSearchFormSubmit} /> 
 
                 {this.state.results.map(result => {
-                    return <Text>{result.listing.name}</Text>;
+                    return <HousingDisplay housing={result} />;
                 })}
             </View>
         );
