@@ -4,9 +4,7 @@ import {
   View,
   Image,
   Button,
-  ListView,
-  TouchableHighlight,
-  StyleSheet
+  Share
 } from 'react-native'
 
 import RNCalendarEvents from 'react-native-calendar-events';
@@ -18,6 +16,7 @@ export default class HousingDisplay extends React.Component {
         this.props.housing = this.props.housing || { listing: {}, pricing_quote: {} };
 
         this.addToCalendar = this.addToCalendar.bind(this);
+        this.share = this.share.bind(this);
     }
 
     render() {
@@ -30,6 +29,7 @@ export default class HousingDisplay extends React.Component {
                 <Text>{this.props.housing.listing.name}</Text>
 
                 <Button title="Ajouter à l'agenda" onPress={() => this.addToCalendar()} />
+                <Button title="Partager par SMS" onPress={() => this.share()} />
             </View>
         );
     }
@@ -41,6 +41,15 @@ export default class HousingDisplay extends React.Component {
             location: housing.listing.public_address,
             startDate: housing.pricing_quote.check_in,
             endDate: housing.pricing_quote.check_out
+        });
+    }
+
+    share() {
+        let housing = this.props.housing;
+        
+        Share.share({
+            title: 'Réservation GiteHub',
+            message: `Réservation GiteHub\n\nDate de début : ${housing.pricing_quote.check_in}\nDate de fin : ${housing.pricing_quote.check_out}\n\nAdresse : ${housing.listing.public_address}\nDescription : "${housing.listing.name}"`
         });
     }
 }
